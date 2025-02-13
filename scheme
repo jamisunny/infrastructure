@@ -1,1 +1,138 @@
-this is a new scheme of architecture 21 pool
+{
+  "diagram": {
+    "name": "Архитектура майнинг пула",
+    "description": "Схема взаимодействия компонентов архитектуры майнинг пула",
+    "elements": [
+      {
+        "id": "clients",
+        "type": "group",
+        "label": "Клиенты (Майнеры)",
+        "elements": [
+          {
+            "id": "miner1",
+            "type": "component",
+            "label": "Майнер 1"
+          },
+          {
+            "id": "miner2",
+            "type": "component",
+            "label": "Майнер 2"
+          },
+          {
+            "id": "minerN",
+            "type": "component",
+            "label": "Майнер N"
+          }
+        ]
+      },
+      {
+        "id": "loadbalancer",
+        "type": "component",
+        "label": "Hetzner Load Balancer"
+      },
+      {
+        "id": "kubernetes",
+        "type": "group",
+        "label": "Kubernetes Cluster",
+        "elements": [
+          {
+            "id": "controlplane",
+            "type": "component",
+            "label": "Control Plane"
+          },
+          {
+            "id": "workernodes",
+            "type": "group",
+            "label": "Worker Nodes",
+            "elements": [
+              {
+                "id": "worker1",
+                "type": "component",
+                "label": "Worker 1"
+              },
+              {
+                "id": "worker2",
+                "type": "component",
+                "label": "Worker 2"
+              },
+              {
+                "id": "workerN",
+                "type": "component",
+                "label": "Worker N"
+              }
+            ]
+          },
+          {
+            "id": "services",
+            "type": "group",
+            "label": "Сервисы",
+            "elements": [
+              {
+                "id": "redis",
+                "type": "component",
+                "label": "Redis Clusters"
+              },
+              {
+                "id": "keda",
+                "type": "component",
+                "label": "KEDA"
+              },
+              {
+                "id": "traefik",
+                "type": "component",
+                "label": "Traefik Ingress"
+              },
+              {
+                "id": "certmanager",
+                "type": "component",
+                "label": "Cert-manager"
+              },
+              {
+                "id": "grafana",
+                "type": "component",
+                "label": "Grafana"
+              },
+              {
+                "id": "celerymaster",
+                "type": "component",
+                "label": "Celery Master"
+              },
+              {
+                "id": "celeryworkers",
+                "type": "component",
+                "label": "Celery Workers"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "from": "clients",
+        "to": "loadbalancer",
+        "label": "Запросы майнеров"
+      },
+      {
+        "from": "loadbalancer",
+        "to": "kubernetes",
+        "label": "Балансировка нагрузки"
+      },
+      {
+        "from": "kubernetes",
+        "to": "redis",
+        "label": "Доступ к данным"
+      },
+      {
+        "from": "kubernetes",
+        "to": "grafana",
+        "label": "Мониторинг"
+      },
+      {
+        "from": "kubernetes",
+        "to": "celerymaster",
+        "label": "Задачи Celery"
+      }
+    ]
+  }
+}
